@@ -78,7 +78,6 @@ transSQL = '''
     FROM STG_MDM_AFFIL
   ) AFFIL
   ON HCP.MDM_HCP_NPI = AFFIL.MDM_AFFIL_HCP_NPI
-  
 '''
 
 # To apply SQL transformation on DynamicFrame
