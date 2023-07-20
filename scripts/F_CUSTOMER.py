@@ -42,6 +42,7 @@ args = getResolvedOptions(
     "GLUE_JOB_NAME",
     "GLUE_SERVICE_ROLE",
     "CATALOG_DB_NAME",
+    "CURATED_BUCKET",
     "PROCESSED_BUCKET"
   ]
 )
