@@ -80,7 +80,7 @@ from (
     MIDDLE_NAME,
     LAST_NAME,
     NPI
-  from STG_MDM_HCP
+  from stg_mdm_hcp
 ) HCP
 left outer join (
   select distinct
@@ -88,7 +88,7 @@ left outer join (
     HCP_ID,
     HCP_NPI,
     HCO_ID
-  from STG_MDM_AFFIL
+  from stg_mdm_affil
 ) AFFIL
 on HCP.NPI = AFFIL.HCP_NPI
 left outer join (
@@ -100,7 +100,7 @@ left outer join (
     CITY,
     STATE,
     ZIP
-  from STG_VEEVA_ADDR
+  from stg_veeva_addr
 ) ADDR
 on HCP.NPI = ADDR.NPI
 '''
