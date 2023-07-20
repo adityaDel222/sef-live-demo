@@ -187,6 +187,7 @@ class Fact(object):
       )
       depNodes[CTL_DATASET_MASTER_['DATASET_NAME']] = S3ReadNode
       print('Dependency fetched: ' + str(CTL_DATASET_MASTER_['DATASET_NAME']))
+      print(S3ReadNode.toDF().show())
     
     self.CTL_DATASET_MASTER = list(filter(lambda x: int(x['JOB_ID']) == int(args['GLUE_JOB_ID']), self.CTL_DATASET_MASTER))[0]
     
