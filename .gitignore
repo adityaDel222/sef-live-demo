@@ -4,3 +4,5 @@ files
 files/*
 lambda-packages
 lambda-packages/*
+Configs.xlsx
+~$Configs.xlsx
