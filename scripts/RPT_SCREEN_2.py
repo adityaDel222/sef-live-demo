@@ -148,10 +148,8 @@ class Reporting(object):
       CTL_DATASET_MASTER_ = list(filter(lambda x: int(x['DATASET_ID']) == int(dependency['SOURCE_DATASET_ID']), self.CTL_DATASET_MASTER))[0]
       self.datasetID = CTL_DATASET_MASTER_['DATASET_ID']
       self.datasetName = CTL_DATASET_MASTER_['DATASET_NAME']
-      if CTL_DATASET_MASTER_['DATASET_TYPE'] == 'raw':
-        dependencyBucket = args['CURATED_BUCKET']
-      else:
-        dependencyBucket = args['PROCESSED_BUCKET']
+      self.datasetType = CTL_DATASET_MASTER_['DATASET_TYPE']
+      self.readBucket = args['CURATED_BUCKET'] if self.datasetType.upper() == 'RAW' else args['PROCESSED_BUCKET']
       S3ReadNode = glueContext.create_dynamic_frame.from_options (
         format_options = {
           'withHeader': True,
@@ -160,7 +158,7 @@ class Reporting(object):
         connection_type = 's3',
         format = 'parquet',
         connection_options = {
-          'paths': [ 's3://' + dependencyBucket + '/' + CTL_DATASET_MASTER_['TARGET_LOCATION'] ]
+          'paths': [ 's3://' + self.readBucket + '/' + CTL_DATASET_MASTER_['TARGET_LOCATION'] ]
         },
         transformation_ctx = 'S3ReadNode'
       )

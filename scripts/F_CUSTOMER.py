@@ -80,7 +80,7 @@ from (
     MIDDLE_NAME,
     LAST_NAME,
     NPI
-  from stg_mdm_hcp
+  from STG_MDM_HCP
 ) HCP
 left outer join (
   select distinct
@@ -88,7 +88,7 @@ left outer join (
     HCP_ID,
     HCP_NPI,
     HCO_ID
-  from stg_mdm_affil
+  from STG_MDM_AFFIL
 ) AFFIL
 on HCP.NPI = AFFIL.HCP_NPI
 left outer join (
@@ -100,7 +100,7 @@ left outer join (
     CITY,
     STATE,
     ZIP
-  from stg_veeva_addr
+  from STG_VEEVA_ADDR
 ) ADDR
 on HCP.NPI = ADDR.NPI
 '''
@@ -173,6 +173,8 @@ class Fact(object):
       CTL_DATASET_MASTER_ = list(filter(lambda x: int(x['DATASET_ID']) == int(dependency['SOURCE_DATASET_ID']), self.CTL_DATASET_MASTER))[0]
       self.datasetID = CTL_DATASET_MASTER_['DATASET_ID']
       self.datasetName = CTL_DATASET_MASTER_['DATASET_NAME']
+      self.datasetType = CTL_DATASET_MASTER_['DATASET_TYPE']
+      self.readBucket = args['CURATED_BUCKET'] if self.datasetType.upper() == 'RAW' else args['PROCESSED_BUCKET']
       S3ReadNode = glueContext.create_dynamic_frame.from_options (
         format_options = {
           'withHeader': True,
@@ -181,13 +183,12 @@ class Fact(object):
         connection_type = 's3',
         format = 'parquet',
         connection_options = {
-          'paths': [ 's3://' + args['PROCESSED_BUCKET'] + '/' + CTL_DATASET_MASTER_['TARGET_LOCATION'] ]
+          'paths': [ 's3://' + self.readBucket + '/' + CTL_DATASET_MASTER_['TARGET_LOCATION'] ]
         },
         transformation_ctx = 'S3ReadNode'
       )
       depNodes[CTL_DATASET_MASTER_['DATASET_NAME']] = S3ReadNode
       print('Dependency fetched: ' + str(CTL_DATASET_MASTER_['DATASET_NAME']))
-      print(S3ReadNode.toDF().show())
     
     self.CTL_DATASET_MASTER = list(filter(lambda x: int(x['JOB_ID']) == int(args['GLUE_JOB_ID']), self.CTL_DATASET_MASTER))[0]
     
