@@ -73,7 +73,8 @@ select distinct
   ADDR.ADDR_LINE_2 as ADDR_LINE_2,
   ADDR.CITY as CITY,
   ADDR.STATE as STATE,
-  ADDR.ZIP as ZIP
+  ADDR.ZIP as ZIP,
+  cast(null as strin) as PLACEHOLDER
 from (
   select distinct
     ID,
